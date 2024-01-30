@@ -1,0 +1,59 @@
+[
+  {
+    "title": "Papas fritas",
+    "description": "Un producto Marolio",
+    "price": 24100,
+    "thumbnailss": [
+      "/img/mostachol_fideos_marolio.png"
+    ],
+    "code": "LÑP080",
+    "stock": 15,
+    "status": true,
+    "category": "Congelados",
+    "id": 1
+  },
+  {
+    "title": "Fideos moñitos chicos",
+    "description": "Un producto Marolio",
+    "price": 1520,
+    "thumbnails": [],
+    "code": "FER965",
+    "stock": 115,
+    "status": true,
+    "category": "Fideos secos",
+    "id": 2
+  },
+  {
+    "title": "Aceite de bacalao",
+    "description": "Un producto Marolio bueno",
+    "price": 2025,
+    "thumbnails": [],
+    "code": "SWQ569",
+    "stock": 221,
+    "status": true,
+    "category": "Aceites",
+    "id": 3
+  },
+  {
+    "title": "Aceite pepito",
+    "description": "Un producto Marolio",
+    "price": 2525,
+    "thumbnails": [],
+    "code": "SUI963",
+    "stock": 220,
+    "status": true,
+    "category": "Aceites",
+    "id": 4
+  },
+  {
+    "title": "Papas fritas Lays",
+    "description": "Ricas",
+    "price": 210,
+    "thumbnails": [],
+    "code": "LAA180",
+    "stock": 150,
+    "status": true,
+    "category": "Abrebocas",
+    "id": 5
+  }
+]
