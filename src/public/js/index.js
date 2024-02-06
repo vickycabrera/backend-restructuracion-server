@@ -29,3 +29,18 @@ const eliminarProducto =(id)=>{
     socket.emit("eliminarProducto",id)
 }
 
+document.getElementById("btnEnviar").addEventListener("click", ()=>{
+    agregarProductos()
+})
+
+const agregarProductos =(id)=>{
+    const producto = {
+        title: document.getElementById("title").value,
+        description: document.getElementById("description").value,
+        price: document.getElementById("price").value,
+        code: document.getElementById("code").value,
+        stock: document.getElementById("stock").value,
+        category: document.getElementById("category").value,
+    }
+    socket.emit("agregarProducto",producto)
+}

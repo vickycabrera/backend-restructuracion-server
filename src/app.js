@@ -41,6 +41,10 @@ socketIo.on("connection", async (socket) => {
         await productManagerInstance.deleteProduct(id)
         socketIo.sockets.emit("productos", await productManagerInstance.getProducts())
     })
+    socket.on("agregarProducto", async (producto) =>{
+        await productManagerInstance.addProduct(producto)
+        socketIo.sockets.emit("productos", await productManagerInstance.getProducts())
+    })
 })
 
 

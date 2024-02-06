@@ -31,5 +31,15 @@
     "status": true,
     "category": "Abrebocas",
     "id": 5
+  },
+  {
+    "title": "arroz ",
+    "description": "arroz para hervir",
+    "price": "760",
+    "code": "KOL987",
+    "stock": "1",
+    "category": "Almacen",
+    "status": true,
+    "id": 6
   }
 ]
