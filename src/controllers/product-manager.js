@@ -8,8 +8,8 @@ class ProductManager {
     }
 
     hasAllProperties(product){
-        const {title, description, code, price, status, stock, category} = product
-        return title && description && code && price && status && (stock !== undefined) && category;
+        const {title, description, code, price, stock, category} = product
+        return title && description && code && price && (stock !== undefined) && category;
     }
 
     isCodeAllreadyInUse (productCode, productsArray){
@@ -27,7 +27,7 @@ class ProductManager {
         else {
             const productsInFile = await this.getProducts()
             ProductManager.ultId = productsInFile.reduce((maxId, product) => Math.max(maxId, product.id), 0);
-            productsInFile.push({...newProduct, id: ++ProductManager.ultId}) 
+            productsInFile.push({...newProduct, status: true, id: ++ProductManager.ultId}) 
             await this.writeFile(productsInFile)
         }
     }

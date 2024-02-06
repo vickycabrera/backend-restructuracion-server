@@ -1,18 +1,5 @@
 [
   {
-    "title": "Papas fritas",
-    "description": "Un producto Marolio",
-    "price": 24100,
-    "thumbnailss": [
-      "/img/mostachol_fideos_marolio.png"
-    ],
-    "code": "LÑP080",
-    "stock": 15,
-    "status": true,
-    "category": "Congelados",
-    "id": 1
-  },
-  {
     "title": "Fideos moñitos chicos",
     "description": "Un producto Marolio",
     "price": 1520,
@@ -33,17 +20,6 @@
     "status": true,
     "category": "Aceites",
     "id": 3
-  },
-  {
-    "title": "Aceite pepito",
-    "description": "Un producto Marolio",
-    "price": 2525,
-    "thumbnails": [],
-    "code": "SUI963",
-    "stock": 220,
-    "status": true,
-    "category": "Aceites",
-    "id": 4
   },
   {
     "title": "Papas fritas Lays",
