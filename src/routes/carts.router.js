@@ -1,24 +1,22 @@
 import { Router } from "express"
-import CartManager from "../controllers/cart-manager.js"
+import CartManager from "../controllers/cart-manager-db.js"
 
+const cartInstance = new CartManager()
 const router = Router()
 
-const cartJsonDir= "src/data/carts.json"
-const cartManagerInstance = new CartManager(cartJsonDir)
-
-router.post("/", async(req,res)=>{
+router.post("/", async (req,res) =>{
     try {
-        await cartManagerInstance.createCart()
-        res.send("Carrito creado correctamente")
+        const newCart = await cartInstance.createCart()
+        res.status(200).send({message:"Carrito creado correctamente", newCart})
     } catch (error) {
         res.status(500).json({error: "No se pudo crear el carrito"})
     }
 })
 
-router.get("/:cid", async(req,res)=>{
-    const cartId = parseInt(req.params.cid)
+router.get("/:cid", async (req,res) =>{
+    const cartId = req.params.cid
     try {
-        const cart = await cartManagerInstance.getCartById(cartId)
+        const cart = await cartInstance.getCartById(cartId)
         if (cart) {
             const cartProducts = cart.products
             res.send(cartProducts)
@@ -30,11 +28,11 @@ router.get("/:cid", async(req,res)=>{
 
 router.post("/:cid/product/:pid", async(req,res)=>{
     const {cid, pid} = req.params
-    const cartId = parseInt(cid)
-    const productId = parseInt(pid)
     try {
-        await cartManagerInstance.addProductToCart(productId, cartId)
-        res.send("Producto agregado correctamente")
+        const cart = await cartInstance.addProductToCard(cid, pid)
+        if (cart){
+            return res.status(200).send({message:"Producto agregado correctamente",cart})
+        } else return res.status(400).send("No se encontró ese carrito")
     } catch (error) {
         res.status(500).json({error: "No se pudo agregar el producto al carrito"})
     }

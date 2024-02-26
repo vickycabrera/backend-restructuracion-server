@@ -1,8 +1,14 @@
 import express, { urlencoded, json } from "express"
 import exphbs from "express-handlebars"
+import "./database.js"
+//Routers
 import viewsRouter from "./routes/views.router.js"
 import productsRouter from "./routes/products.router.js"
-import ProductManager from "./controllers/product-manager.js";
+import cartsRouter from "./routes/carts.router.js"
+//Modelos de MongoDb
+import { ProductModel } from "./models/product.model.js"
+import { MessageModel } from "./models/messages.model.js"
+//Socket
 import { Server } from 'socket.io';
 
 const app = express()
@@ -20,6 +26,7 @@ app.use(express.static("./src/public"));
 //Routing
 app.use("/", viewsRouter);
 app.use("/api/products", productsRouter)
+app.use("/api/carts", cartsRouter)
 
 const PUERTO = 8080
 
@@ -27,23 +34,26 @@ export const httpServer = app.listen(PUERTO, ()=>{
     console.log(`Escuchando en http://localhost:${PUERTO}`)
 })
 
-//Product Manager
-const productJsonDir= "src/data/products.json"
-const productManagerInstance = new ProductManager(productJsonDir)
-
 //Crear instancia de socket para el server
 const socketIo = new Server(httpServer, { cors: { origin: '*' } });
 
 socketIo.on("connection", async (socket) => {
     console.log("Un cliente se conectó conmigo");
-    socket.emit("productos", await productManagerInstance.getProducts());
+    socket.emit("productos", await ProductModel.find());
     socket.on("eliminarProducto", async (id) =>{
-        await productManagerInstance.deleteProduct(id)
-        socketIo.sockets.emit("productos", await productManagerInstance.getProducts())
+        await ProductModel.findByIdAndDelete(id)
+        socketIo.sockets.emit("productos", await ProductModel.find())
     })
     socket.on("agregarProducto", async (producto) =>{
-        await productManagerInstance.addProduct(producto)
-        socketIo.sockets.emit("productos", await productManagerInstance.getProducts())
+        const newProduct = new ProductModel(producto)
+        await newProduct.save()
+        socketIo.sockets.emit("productos", await ProductModel.find())
+    })
+    socket.on("message", async (data) => {
+        const newMessage = new MessageModel(data)
+        await newMessage.save()
+        const messages = await MessageModel.find()
+        socketIo.sockets.emit("messagesLogs", messages)
     })
 })
 

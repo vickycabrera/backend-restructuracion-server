@@ -1,14 +1,10 @@
 import express from "express"
-import ProductManager from "../controllers/product-manager.js"
-
 const router = express.Router(); 
 
-const productJsonDir= "src/data/products.json"
-const productManagerInstance = new ProductManager(productJsonDir)
-
-router.get("/", async (req, res) => {
+router.get("/", async(req,res)=>{
+    const limit = req.query.limit
     try {
-        const productos = await productManagerInstance.getProducts(); 
+        const productos = await ProductModel.find().limit(limit)  
         res.render("home", {productos})
     } catch (error) {
         res.status(500).json({error: "Error interno del servidor"})
@@ -22,6 +18,15 @@ router.get("/realtimeproducts", async (req, res) => {
         res.status(500).json({error: "Error interno del servidor"})
     }
 })
+
+router.get("/chat", (req, res) => {
+    try {
+        res.render("chat")
+    } catch (error) {
+        res.status(500).json({error: "Error interno del servidor"})
+    }
+});
+
 
 export default router
 

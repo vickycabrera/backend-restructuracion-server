@@ -1,11 +1,12 @@
-/*Generamos una instancia de Socket.io, ahora desde el lado del cliente*/
-
+//Generamos una instancia de Socket.io, ahora desde el lado del cliente
 const socket = io(); 
 
+//Socket escucha productos para renderizarlos 
 socket.on("productos", (data)=>{
     renderProductos(data)
 });
 
+//Función para renderizar el contenedor de productos
 const renderProductos = (productos) => {
     const contenedorProds = document.getElementById("contenedorProductosRealTime")
     contenedorProds.innerHTML = ""
@@ -19,21 +20,24 @@ const renderProductos = (productos) => {
             <button> Eliminar </button>
         `
         contenedorProds.appendChild(card)  
-        card.querySelector("button").addEventListener("click",()=>{
-            eliminarProducto(prod.id)
+        card.querySelector("button").addEventListener("click",() => {
+            eliminarProducto(prod._id)
         })
     });
 }
 
-const eliminarProducto =(id)=>{
-    socket.emit("eliminarProducto",id)
+//Función para eliminar productos por id
+const eliminarProducto = (id) => {
+    socket.emit("eliminarProducto", id)
 }
 
-document.getElementById("btnEnviar").addEventListener("click", ()=>{
+//Le agregamos al boton del formulario la función de agregar un producto
+document.getElementById("btnEnviar").addEventListener("click", () => {
     agregarProductos()
 })
 
-const agregarProductos =(id)=>{
+//Función para agregar un producto
+const agregarProductos = () =>{
     const producto = {
         title: document.getElementById("title").value,
         description: document.getElementById("description").value,
@@ -42,5 +46,5 @@ const agregarProductos =(id)=>{
         stock: document.getElementById("stock").value,
         category: document.getElementById("category").value,
     }
-    socket.emit("agregarProducto",producto)
+    socket.emit("agregarProducto", producto)
 }

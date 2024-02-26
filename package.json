@@ -1,5 +1,5 @@
 {
-  "name": "cabrera-desafio4",
+  "name": "cabrera-desafio5",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -14,6 +14,7 @@
   "dependencies": {
     "express": "^4.18.2",
     "express-handlebars": "^7.1.2",
+    "mongoose": "^8.2.0",
     "socket.io": "^4.7.4"
   },
   "devDependencies": {
