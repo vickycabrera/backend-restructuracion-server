@@ -1,0 +1,18 @@
+<h1>Listado de productos del carrito</h1>
+
+<div>
+    <div class="product-list">
+        {{#each productsInCart}}
+            <div class="product-item" key={{this._id}}>
+                <img src="https://maxiconsumo.com/media/catalog/product/cache/8313a15b471f948db4d9d07d4a9f04a2/2/1/21645.jpg" alt={{this.title}} class="product-image" />
+                <div class="product-details">
+                    <h3 class="product-name"> {{this.title}} </h3>
+                    <p class="product-price"> {{this.description}} </p>
+                    <p class="product-price"> ${{this.price}} </p>
+                    <p class="product-price"> Cantidad: {{this.quantity}} </p>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</div>
+

@@ -4,16 +4,6 @@ import ProductManager from "../controllers/product-manager-db.js"
 const newPMinstance = new ProductManager()
 const router = Router()
 
-router.get("/", async(req,res)=>{
-    const limit = req.query.limit
-    try {
-        const products = await newPMinstance.getProducts(limit)
-        res.send(products)
-    } catch (error) {
-        res.status(500).json({error: "No se puedo encontrar los productos"})
-    }
-})
-
 router.get("/:pid", async(req,res)=>{
     const productId = req.params.pid
     try {

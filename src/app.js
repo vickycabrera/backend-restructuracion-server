@@ -6,7 +6,6 @@ import viewsRouter from "./routes/views.router.js"
 import productsRouter from "./routes/products.router.js"
 import cartsRouter from "./routes/carts.router.js"
 //Modelos de MongoDb
-import { ProductModel } from "./models/product.model.js"
 import { MessageModel } from "./models/messages.model.js"
 //Socket
 import { Server } from 'socket.io';
@@ -38,17 +37,6 @@ export const httpServer = app.listen(PUERTO, ()=>{
 const socketIo = new Server(httpServer, { cors: { origin: '*' } });
 
 socketIo.on("connection", async (socket) => {
-    console.log("Un cliente se conectó conmigo");
-    socket.emit("productos", await ProductModel.find());
-    socket.on("eliminarProducto", async (id) =>{
-        await ProductModel.findByIdAndDelete(id)
-        socketIo.sockets.emit("productos", await ProductModel.find())
-    })
-    socket.on("agregarProducto", async (producto) =>{
-        const newProduct = new ProductModel(producto)
-        await newProduct.save()
-        socketIo.sockets.emit("productos", await ProductModel.find())
-    })
     socket.on("message", async (data) => {
         const newMessage = new MessageModel(data)
         await newMessage.save()

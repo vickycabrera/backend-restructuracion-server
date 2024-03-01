@@ -1,0 +1,29 @@
+<h1>Listado de productos</h1>
+
+<div>
+    <div class="product-list">
+        {{#each products}}
+            <div class="product-item" key={{this.title}}>
+                <img src="https://maxiconsumo.com/media/catalog/product/cache/8313a15b471f948db4d9d07d4a9f04a2/2/1/21645.jpg" alt={{this.title}} class="product-image" />
+                <div class="product-details">
+                    <h3 class="product-name"> {{this.title}} </h3>
+                    <p class="product-price"> {{this.description}} </p>
+                    <button id="addToCart" class="add-to-cart-button">
+                        Agregar al carrito
+                    </button>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+{{#if hasPrevPage}}
+    <a href="/products?page={{prevPage}}"> Anterior </a>
+{{/if}}
+
+{{#if hasNextPage}}
+    <a href="/products?page={{nextPage}}"> Siguiente </a>
+{{/if}}
+
+
+<p>Pagina {{currentPage}} de {{totalPages}} </p>
+</div>
+
