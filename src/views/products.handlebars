@@ -1,6 +1,18 @@
 <h1>Listado de productos</h1>
 
 <div>
+    <h3>Bienvenid@</h3>
+    <p>{{user.first_name}} {{user.last_name}}!</p>
+    <p>Email: {{user.email}}</p>
+    <p>Edad: {{user.age}}</p>
+    {{#if user.isAdmin}}
+        <p>Rol: Admin</p>
+    {{else}}
+        <p>Rol: Usuario</p>
+    {{/if}}
+    <a href="/api/sessions/logout">Logout</a>
+</div>
+<div>
     <div class="product-list">
         {{#each products}}
             <div class="product-item" key={{this.title}}>

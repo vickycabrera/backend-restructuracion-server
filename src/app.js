@@ -1,10 +1,14 @@
 import express, { urlencoded, json } from "express"
 import exphbs from "express-handlebars"
+import session from "express-session"
+import MongoStore from "connect-mongo"
 import "./database.js"
 //Routers
 import viewsRouter from "./routes/views.router.js"
 import productsRouter from "./routes/products.router.js"
 import cartsRouter from "./routes/carts.router.js"
+import userRouter from "./routes/user.router.js";
+import sessionRouter from "./routes/session.router.js"
 //Modelos de MongoDb
 import { MessageModel } from "./models/messages.model.js"
 //Socket
@@ -21,11 +25,38 @@ app.set("views", "./src/views");
 app.use(urlencoded({extended:true})) 
 app.use(json()) 
 app.use(express.static("./src/public"));
+app.use(session({
+    secret: "secretEcommerce", 
+    resave: true, 
+    saveUninitialized: true, 
+    store: MongoStore.create({
+        mongoUrl: "mongodb+srv://vlcabrera92:coderhouse@cluster0.4c9dzop.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0",
+        ttl: 100
+    })
+}))
+
+
+//Middleware de autenticación, si no esta logeado: 
+    export function auth(req, res, next) {
+        if (req.session.login) {
+            return next();
+        }
+        return res.redirect("/login")
+    }
+//Middleware de redirección, si ya esta logeado: 
+    export function redirect(req, res, next) {
+        if (req.session.login) {
+            return res.redirect("/products")
+        }
+        return next()
+    }
 
 //Routing
 app.use("/", viewsRouter);
 app.use("/api/products", productsRouter)
 app.use("/api/carts", cartsRouter)
+app.use("/api/users", userRouter);
+app.use("/api/sessions", sessionRouter);
 
 const PUERTO = 8080
 

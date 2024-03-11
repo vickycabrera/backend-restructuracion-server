@@ -17,7 +17,6 @@ router.get("/:cid", async (req,res) =>{
     const cartId = req.params.cid
     try {
         const cart = await cartInstance.getCartById(cartId)
-        console.log("carrito x id", cart)
         if (cart) {
             const cartProducts = cart.products
             res.send(cartProducts)
