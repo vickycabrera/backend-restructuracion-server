@@ -13,6 +13,9 @@ import sessionRouter from "./routes/session.router.js"
 import { MessageModel } from "./models/messages.model.js"
 //Socket
 import { Server } from 'socket.io';
+//swagger
+import swaggerUi from 'swagger-ui-express'
+import swaggerSpec from "./swagger.js"
 
 const app = express()
 
@@ -20,7 +23,6 @@ const app = express()
 app.engine("handlebars", exphbs.engine());
 app.set("view engine", "handlebars");
 app.set("views", "./src/views"); 
-
 //Middlewares
 app.use(urlencoded({extended:true})) 
 app.use(json()) 
@@ -35,32 +37,32 @@ app.use(session({
     })
 }))
 
-
 //Middleware de autenticación, si no esta logeado: 
-    export function auth(req, res, next) {
-        if (req.session.login) {
-            return next();
-        }
-        return res.redirect("/login")
+export function auth(req, res, next) {
+    if (req.session.login) {
+        return next();
     }
+    return res.redirect("/login")
+}
 //Middleware de redirección, si ya esta logeado: 
-    export function redirect(req, res, next) {
-        if (req.session.login) {
-            return res.redirect("/products")
-        }
-        return next()
+export function redirect(req, res, next) {
+    if (req.session.login) {
+        return res.redirect("/products")
     }
+    return next()
+}
 
 //Routing
-app.use("/", viewsRouter);
+app.use("/", viewsRouter)
 app.use("/api/products", productsRouter)
 app.use("/api/carts", cartsRouter)
-app.use("/api/users", userRouter);
-app.use("/api/sessions", sessionRouter);
+app.use("/api/users", userRouter)
+app.use("/api/sessions", sessionRouter)
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 const PUERTO = 8080
 
-export const httpServer = app.listen(PUERTO, ()=>{
+export const httpServer = app.listen(PUERTO, () => {
     console.log(`Escuchando en http://localhost:${PUERTO}`)
 })
 
