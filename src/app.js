@@ -16,6 +16,9 @@ import { Server } from 'socket.io';
 //swagger
 import swaggerUi from 'swagger-ui-express'
 import swaggerSpec from "./swagger.js"
+//Passport
+import { initializePassport } from "./config/passport.config.js"
+import passport from "passport"
 
 const app = express()
 
@@ -51,6 +54,11 @@ export function redirect(req, res, next) {
     }
     return next()
 }
+
+//Cambios passport
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
 
 //Routing
 app.use("/", viewsRouter)

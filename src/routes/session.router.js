@@ -1,5 +1,5 @@
 import express from "express";
-import UserModel from "../models/user.model.js";
+import passport from "passport";
 const router = express.Router();
 
 /**
@@ -9,51 +9,20 @@ const router = express.Router();
  *   description: Operaciones relacionadas con la autenticación y sesiones de usuario
  */
 
-/**
- * @openapi
- *   /api/sessions/login:
- *     post:
- *       summary: Iniciar sesión de usuario
- *       tags: [Sesiones]
- *       requestBody:
- *         required: true
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 email:
- *                   type: string
- *                 password:
- *                   type: string
- *       responses:
- *         '200':
- *           description: Sesión iniciada con éxito
- *         '401':
- *           description: Contraseña no válida
- *         '404':
- *           description: Usuario no encontrado
- *         '500':
- *           description: Error en el login
- */
 
-
-router.post("/login", async (req, res) => {
-    const {email, password} = req.body
-    try {
-        const user = await UserModel.findOne({email})
-        if (user) {
-            if (user.password === password) {
-                req.session.login = true
-                req.session.user = {...user._doc}
-                res.redirect("/products")
-            } else return res.status(401).send("Contraseña no válida")
-        } else return res.status(404).send({error: "Usuario no encontrado"})
-        
-    } catch (error) {
-        res.status(500).send("Error en el login")
+//Version con passport 
+router.post("/login", passport.authenticate("login", {failureRedirect: "/api/sessions/faillogin"}), 
+async (req, res)=>{
+    if (!req.user) return res.status(400).send({status: "error"})
+    req.session.user = {
+        first_name: req.user.first_name,
+        last_name: req.user.last_name,
+        age: req.user.age,
+        email: req.user.email
     }
-});
+    req.session.login = true
+    res.redirect("/products")
+})
 
 /**
  * @openapi
@@ -71,6 +40,10 @@ router.get("/logout", async (req,res)=> {
         req.session.destroy()
     }
     res.redirect("/login")
+})
+
+router.get("/faillogin", async (req, res)=> {
+    res.send({error: "fallo el loginnnn"})
 })
 
 export default router
