@@ -46,4 +46,15 @@ router.get("/faillogin", async (req, res)=> {
     res.send({error: "fallo el loginnnn"})
 })
 
+router.get("/github", passport.authenticate("github", {scope:["user:email"]}), 
+async(req,res)=>{})
+
+router.get("/githubcallback", passport.authenticate("github", {failureRedirect: "/login"}), async(req, res)=>{
+    // La estrategia de github va a retornar el usuario,
+    // entonces lo agregamos a nuestra session
+    req.session.user = req.user
+    req.session.login = true
+    res.redirect("/products")
+})
+
 export default router

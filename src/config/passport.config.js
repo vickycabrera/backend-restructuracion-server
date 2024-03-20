@@ -2,6 +2,7 @@
 
 import passport from "passport"
 import local from "passport-local"
+import GithubStrategy from "passport-github2"
 
 //Importamos los modulos 
 import UserModel from "../models/user.model.js"
@@ -56,5 +57,31 @@ export const initializePassport = () => {
         let user = await UserModel.findById({_id:id});
         done(null, user);
     })
+    //Estrategia para GitHub
+    passport.use("github", new GithubStrategy({
+        clientID: "Iv1.d2405492b88c0090",
+        clientSecret: "8a276eecfe27df194295c71a7bae11588ee1848e",
+        callbackURL: "http://localhost:8080/api/sessions/githubcallback"
+    }, async(accessToken, refreshToken, profile, done)=>{
+        try {
+            const user = await UserModel.findOne({email: profile._json.email})
+            if(!user) {
+                const newUser = {
+                    email: profile._json.email,
+                    first_name: profile._json.name,
+                    last_name: "secreto",
+                    age: 10,
+                    password: "secreto"
+                }
+                const result = await UserModel.create(newUser)
+                done(null, result)
+            } else {
+                done(null, user)
+            }
+        } catch (error) {
+            return done(error)
+        }
+    }))
+
 }
 
