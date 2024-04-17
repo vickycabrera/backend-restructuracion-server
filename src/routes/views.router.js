@@ -1,11 +1,13 @@
 import express from "express"
-import ProductManager from "../controllers/product-manager-db.js"
-import CartManager from "../controllers/cart-manager-db.js"
+import ProductService from "../services/products.services.js";
+import CartService from "../services/carts.services.js";
+
 import passport from "passport";
 
 const router = express.Router(); 
-const newPMinstance = new ProductManager()
-const cartInstance = new CartManager()
+const productService = new ProductService()
+const cartService = new CartService()
+
 
 router.get("/", (req, res) => {
     try {
@@ -27,11 +29,11 @@ router.get(
     "/products", 
     passport.authenticate("jwt", {session:false}), 
     async(req, res) => {
-        const {limit, page, sort, query} = req.query
-        const search = query ? JSON.parse(query) : undefined
-        const sortDirection = sort ? JSON.parse(sort) : undefined
         try {
-            const result = await newPMinstance.getProducts(limit, page, sortDirection, search)
+            const {limit, page, sort, query} = req.query
+            const search = query ? JSON.parse(query) : undefined
+            const sortDirection = sort ? JSON.parse(sort) : undefined
+            const result = await productService.getProducts(limit, page, sortDirection, search);
             const products = result.docs.map( product => {
                 const {_id, ...rest} = product.toObject();
                 return rest;
@@ -55,9 +57,9 @@ router.get(
     "/carts/:cid", 
     passport.authenticate("jwt", {session:false}), 
     async(req, res) => {
-        const {cid} = req.params
         try {
-            const result = await cartInstance.getCartById(cid)
+            const cartId = req.params.cid
+            const result = await cartService.getCartById(cartId)
             const products = result.products.map(item => {
                 return {
                     ...item.product.toObject(),

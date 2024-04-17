@@ -1,6 +1,26 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
+import configObject from "./config/config.js"
 
-mongoose.connect("mongodb+srv://vlcabrera92:coderhouse@cluster0.4c9dzop.mongodb.net/ecommerce?retryWrites=true&w=majority&appName=Cluster0")
-    .then(()=> console.log("Conexión exitosa"))
-    .catch((error)=> console.log("Error en la conexión"))
+const {mongo_url} = configObject;
 
+//Patron de diseño Singleton
+class BaseDatos {
+    static #instancia;
+
+    constructor() {
+        mongoose.connect(mongo_url);
+    }
+
+    static getInstancia(){
+        if(this.#instancia) {
+            console.log("Conexión previa");
+            return this.#instancia;
+        }
+
+        this.#instancia = new BaseDatos();
+        console.log("Conexión exitosa");
+        return this.#instancia;
+    }
+}
+
+export default BaseDatos.getInstancia()

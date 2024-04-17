@@ -1,7 +1,7 @@
 import { ProductModel } from "../models/product.model.js";
 
-class ProductManager {
-    async addProduct({title, description, price, category, stock, code, status}){
+class ProductService {
+    async createProduct({title, description, price, category, stock, code, status}){
         try {
             if (!title || !description || !price || !category || !stock || !code){
                 throw new Error ("Todos los campos son obligatorios")
@@ -17,15 +17,15 @@ class ProductManager {
                 code,
                 status: status || true,
             })
-            await newProduct.save()
+            return await newProduct.save()
         } catch (error) {
-            console.log ("Error al crear un nuevo producto", error)
-            throw error
+            throw new Error("Error al crear un producto");
         }
     }
     async getProducts(limit, page, sortDirection, query){
         const resultsPerPage = limit || 10
         let currentPage = page || 1
+        //TO DO: chequear sortDirection y query
         try {
             const options = {
                 limit: resultsPerPage, 
@@ -40,21 +40,16 @@ class ProductManager {
             )
             return result
         } catch (error) {
-            console.log ("Error al traer los productos", error)
-            return {
-                status: 500,
-                message: error.message
-            }
+            throw new Error("Error al buscar los productos");
         }
     }
     async getProductById(id){
         try {
             const product = await ProductModel.findById(id)
-            if (!product) throw new Error ("producto no encontrado")
+            if (!product) throw new Error ("No se encontró un producto con ese id")
             return product
         } catch (error) {
-            console.log ("Error al buscar el producto por id", error)
-            throw error
+            throw new Error ("Error al obtener el producto por id")
         }
     }
     async updateProduct(id, product){
@@ -63,8 +58,7 @@ class ProductManager {
             if (!updateProduct) throw new Error ("producto no encontrado")
             return updateProduct
         } catch (error) {
-            console.log ("Error al buscar actualizar producto por id", error)
-            throw error
+            throw new Error ("Error al actualizar el producto por id")
         }
     }
     async deleteProduct(id){
@@ -73,10 +67,9 @@ class ProductManager {
             if (!deleteProduct) throw new Error ("producto no encontrado")
             return deleteProduct
         } catch (error) {
-            console.log ("Error al eliminar producto por id", error)
-            throw error
+            throw new Error ("Error al eliminar el producto")
         }
     }
 }
 
-export default ProductManager
+export default ProductService
